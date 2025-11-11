@@ -26,69 +26,14 @@ interface CartItem extends Game {
 const games: Game[] = [
   {
     id: 1,
-    title: 'Драконье Королевство',
-    price: 3499,
+    title: 'Футбольный Менеджер',
+    price: 3299,
     players: '2-4',
-    age: '12+',
-    duration: '60-90 мин',
-    image: 'https://cdn.poehali.dev/projects/f8761b97-9e48-42ae-836e-b40cace7b8ef/files/c1c3a2ef-48bb-4767-ad92-4417982e0862.jpg',
-    category: 'Стратегия',
-    description: 'Эпическая стратегическая игра в фэнтезийном мире драконов'
-  },
-  {
-    id: 2,
-    title: 'Гексагональная Империя',
-    price: 4299,
-    players: '2-6',
-    age: '14+',
-    duration: '90-120 мин',
-    image: 'https://cdn.poehali.dev/projects/f8761b97-9e48-42ae-836e-b40cace7b8ef/files/6ad1ac46-412e-4e00-8617-b87eab88c8dd.jpg',
-    category: 'Стратегия',
-    description: 'Сложная стратегия с гексагональным полем и миниатюрами'
-  },
-  {
-    id: 3,
-    title: 'Настольный Марафон',
-    price: 2799,
-    players: '3-8',
     age: '10+',
-    duration: '45-60 мин',
-    image: 'https://cdn.poehali.dev/projects/f8761b97-9e48-42ae-836e-b40cace7b8ef/files/0b74b40f-8316-45ab-88fe-d1780ff8980c.jpg',
-    category: 'Семейная',
-    description: 'Веселая семейная игра для большой компании'
-  },
-  {
-    id: 4,
-    title: 'Космические Колонии',
-    price: 3899,
-    players: '2-5',
-    age: '12+',
-    duration: '60-90 мин',
-    image: 'https://cdn.poehali.dev/projects/f8761b97-9e48-42ae-836e-b40cace7b8ef/files/c1c3a2ef-48bb-4767-ad92-4417982e0862.jpg',
-    category: 'Стратегия',
-    description: 'Покоряйте галактику и стройте космические станции'
-  },
-  {
-    id: 5,
-    title: 'Детективное Агентство',
-    price: 2999,
-    players: '2-6',
-    age: '14+',
-    duration: '90-120 мин',
-    image: 'https://cdn.poehali.dev/projects/f8761b97-9e48-42ae-836e-b40cace7b8ef/files/0b74b40f-8316-45ab-88fe-d1780ff8980c.jpg',
-    category: 'Детектив',
-    description: 'Расследуйте загадочные преступления и находите улики'
-  },
-  {
-    id: 6,
-    title: 'Карточный Дуэль',
-    price: 1499,
-    players: '2',
-    age: '8+',
-    duration: '20-30 мин',
-    image: 'https://cdn.poehali.dev/projects/f8761b97-9e48-42ae-836e-b40cace7b8ef/files/6ad1ac46-412e-4e00-8617-b87eab88c8dd.jpg',
-    category: 'Карточная',
-    description: 'Быстрая карточная игра для двоих игроков'
+    duration: '45-90 мин',
+    image: 'https://cdn.poehali.dev/projects/f8761b97-9e48-42ae-836e-b40cace7b8ef/files/3443cce5-f128-4ba8-a6f9-e74e703a6960.jpg',
+    category: 'Спортивная',
+    description: 'Тактическая настольная игра про футбол с миниатюрами игроков, мячом и игровым полем'
   }
 ];
 
@@ -98,7 +43,7 @@ export default function Index() {
   const [selectedCategory, setSelectedCategory] = useState<string>('Все');
   const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000]);
 
-  const categories = ['Все', 'Стратегия', 'Семейная', 'Детектив', 'Карточная'];
+  const categories = ['Все', 'Спортивная'];
 
   const filteredGames = games.filter(game => {
     const categoryMatch = selectedCategory === 'Все' || game.category === selectedCategory;
@@ -315,9 +260,9 @@ export default function Index() {
               <p className="text-muted-foreground text-lg">Самые продаваемые игры месяца</p>
             </div>
             
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {games.slice(0, 3).map((game, index) => (
-                <Card key={game.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+            <div className="flex justify-center">
+              {games.slice(0, 1).map((game, index) => (
+                <Card key={game.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in max-w-md w-full" style={{ animationDelay: `${index * 100}ms` }}>
                   <div className="relative h-48 overflow-hidden">
                     <img
                       src={game.image}
