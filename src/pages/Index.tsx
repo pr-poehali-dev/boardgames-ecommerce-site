@@ -95,6 +95,16 @@ const games: Game[] = [
 export default function Index() {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [activeSection, setActiveSection] = useState('home');
+  const [selectedCategory, setSelectedCategory] = useState<string>('Все');
+  const [priceRange, setPriceRange] = useState<[number, number]>([0, 5000]);
+
+  const categories = ['Все', 'Стратегия', 'Семейная', 'Детектив', 'Карточная'];
+
+  const filteredGames = games.filter(game => {
+    const categoryMatch = selectedCategory === 'Все' || game.category === selectedCategory;
+    const priceMatch = game.price >= priceRange[0] && game.price <= priceRange[1];
+    return categoryMatch && priceMatch;
+  });
 
   const addToCart = (game: Game) => {
     setCart(prevCart => {
@@ -356,9 +366,115 @@ export default function Index() {
             <h2 className="text-4xl font-bold mb-4">Каталог игр</h2>
             <p className="text-muted-foreground text-lg">Весь ассортимент нашего магазина</p>
           </div>
+
+          <div className="mb-8 space-y-6">
+            <Card className="p-6">
+              <div className="space-y-6">
+                <div>
+                  <h3 className="font-semibold mb-3 flex items-center gap-2">
+                    <Icon name="Filter" size={20} className="text-primary" />
+                    Категория
+                  </h3>
+                  <div className="flex flex-wrap gap-2">
+                    {categories.map(category => (
+                      <Button
+                        key={category}
+                        variant={selectedCategory === category ? 'default' : 'outline'}
+                        onClick={() => setSelectedCategory(category)}
+                        className="transition-all"
+                      >
+                        {category}
+                      </Button>
+                    ))}
+                  </div>
+                </div>
+
+                <Separator />
+
+                <div>
+                  <div className="flex items-center justify-between mb-3">
+                    <h3 className="font-semibold flex items-center gap-2">
+                      <Icon name="DollarSign" size={20} className="text-primary" />
+                      Цена
+                    </h3>
+                    <span className="text-sm text-muted-foreground">
+                      {priceRange[0]} ₽ — {priceRange[1]} ₽
+                    </span>
+                  </div>
+                  <div className="space-y-4">
+                    <input
+                      type="range"
+                      min="0"
+                      max="5000"
+                      step="100"
+                      value={priceRange[1]}
+                      onChange={(e) => setPriceRange([priceRange[0], parseInt(e.target.value)])}
+                      className="w-full h-2 bg-muted rounded-lg appearance-none cursor-pointer accent-primary"
+                    />
+                    <div className="flex gap-4">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setPriceRange([0, 2000])}
+                      >
+                        До 2000 ₽
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setPriceRange([2000, 4000])}
+                      >
+                        2000-4000 ₽
+                      </Button>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() => setPriceRange([4000, 5000])}
+                      >
+                        От 4000 ₽
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+
+                {(selectedCategory !== 'Все' || priceRange[0] !== 0 || priceRange[1] !== 5000) && (
+                  <Button
+                    variant="ghost"
+                    className="w-full"
+                    onClick={() => {
+                      setSelectedCategory('Все');
+                      setPriceRange([0, 5000]);
+                    }}
+                  >
+                    <Icon name="X" size={16} className="mr-2" />
+                    Сбросить фильтры
+                  </Button>
+                )}
+              </div>
+            </Card>
+          </div>
           
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {games.map((game, index) => (
+          <div className="mb-4 text-center">
+            <p className="text-muted-foreground">
+              Найдено игр: <span className="font-semibold text-foreground">{filteredGames.length}</span>
+            </p>
+          </div>
+
+          {filteredGames.length === 0 ? (
+            <div className="text-center py-12">
+              <Icon name="Search" size={64} className="mx-auto text-muted-foreground mb-4" />
+              <h3 className="text-xl font-semibold mb-2">Игры не найдены</h3>
+              <p className="text-muted-foreground mb-4">Попробуйте изменить параметры фильтров</p>
+              <Button onClick={() => {
+                setSelectedCategory('Все');
+                setPriceRange([0, 5000]);
+              }}>
+                Сбросить фильтры
+              </Button>
+            </div>
+          ) : (
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+              {filteredGames.map((game, index) => (
               <Card key={game.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in" style={{ animationDelay: `${index * 50}ms` }}>
                 <div className="relative h-48 overflow-hidden">
                   <img
@@ -396,8 +512,9 @@ export default function Index() {
                   </Button>
                 </CardFooter>
               </Card>
-            ))}
-          </div>
+              ))}
+            </div>
+          )}
         </section>
       )}
 
