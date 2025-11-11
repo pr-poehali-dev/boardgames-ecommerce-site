@@ -17,6 +17,9 @@ interface Game {
   image: string;
   category: string;
   description: string;
+  fullDescription?: string;
+  rules?: string[];
+  contents?: string[];
 }
 
 interface CartItem extends Game {
@@ -33,7 +36,25 @@ const games: Game[] = [
     duration: '45-90 мин',
     image: 'https://cdn.poehali.dev/projects/f8761b97-9e48-42ae-836e-b40cace7b8ef/files/3443cce5-f128-4ba8-a6f9-e74e703a6960.jpg',
     category: 'Спортивная',
-    description: 'Тактическая настольная игра про футбол с миниатюрами игроков, мячом и игровым полем'
+    description: 'Тактическая настольная игра про футбол с миниатюрами игроков, мячом и игровым полем',
+    fullDescription: 'Футбольный Менеджер — это захватывающая тактическая игра, которая позволяет вам стать настоящим тренером футбольной команды. Управляйте своими игроками на поле, разрабатывайте стратегию и приведите команду к победе! Игра сочетает элементы стратегии, тактики и немного удачи с бросками кубиков.',
+    rules: [
+      'Каждый игрок выбирает свою команду и расставляет миниатюры на половине поля',
+      'В свой ход игрок может совершить до 3 действий: передвижение игрока, передача мяча или удар по воротам',
+      'Для выполнения действий бросайте кубики — результат определяет успешность маневра',
+      'Защита противника может перехватывать мяч или блокировать удары',
+      'Побеждает команда, забившая больше голов за 2 тайма по 30 минут игрового времени',
+      'Можно использовать тактические карты для усиления команды или ослабления соперника'
+    ],
+    contents: [
+      'Игровое поле футбольного стадиона',
+      '24 миниатюры футболистов (по 11 игроков и вратарь на команду)',
+      'Мяч и 6 игровых кубиков',
+      '40 тактических карт',
+      '4 карточки команд с характеристиками',
+      'Жетоны состояния игроков',
+      'Правила игры на русском языке'
+    ]
   }
 ];
 
@@ -260,45 +281,88 @@ export default function Index() {
               <p className="text-muted-foreground text-lg">Самые продаваемые игры месяца</p>
             </div>
             
-            <div className="flex justify-center">
+            <div className="max-w-5xl mx-auto">
               {games.slice(0, 1).map((game, index) => (
-                <Card key={game.id} className="overflow-hidden hover:shadow-xl transition-all duration-300 hover:-translate-y-1 animate-fade-in max-w-md w-full" style={{ animationDelay: `${index * 100}ms` }}>
-                  <div className="relative h-48 overflow-hidden">
-                    <img
-                      src={game.image}
-                      alt={game.title}
-                      className="w-full h-full object-cover transition-transform duration-300 hover:scale-110"
-                    />
-                    <Badge className="absolute top-4 right-4 bg-accent">{game.category}</Badge>
-                  </div>
-                  <CardHeader>
-                    <CardTitle>{game.title}</CardTitle>
-                    <CardDescription>{game.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex items-center gap-4 text-sm text-muted-foreground mb-4">
-                      <div className="flex items-center gap-1">
-                        <Icon name="Users" size={16} />
-                        <span>{game.players}</span>
+                <div key={game.id} className="animate-fade-in" style={{ animationDelay: `${index * 100}ms` }}>
+                  <Card className="overflow-hidden hover:shadow-xl transition-all duration-300">
+                    <div className="grid lg:grid-cols-2 gap-8">
+                      <div className="relative h-80 lg:h-auto overflow-hidden">
+                        <img
+                          src={game.image}
+                          alt={game.title}
+                          className="w-full h-full object-cover"
+                        />
+                        <Badge className="absolute top-4 right-4 bg-accent">{game.category}</Badge>
                       </div>
-                      <div className="flex items-center gap-1">
-                        <Icon name="Clock" size={16} />
-                        <span>{game.duration}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Icon name="User" size={16} />
-                        <span>{game.age}</span>
+                      
+                      <div className="p-6 space-y-6">
+                        <div>
+                          <h3 className="text-3xl font-bold mb-2">{game.title}</h3>
+                          <p className="text-muted-foreground">{game.fullDescription}</p>
+                        </div>
+
+                        <div className="flex items-center gap-6 text-sm text-muted-foreground">
+                          <div className="flex items-center gap-2">
+                            <Icon name="Users" size={20} className="text-primary" />
+                            <span>{game.players} игрока</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Icon name="Clock" size={20} className="text-primary" />
+                            <span>{game.duration}</span>
+                          </div>
+                          <div className="flex items-center gap-2">
+                            <Icon name="User" size={20} className="text-primary" />
+                            <span>{game.age}</span>
+                          </div>
+                        </div>
+
+                        <Separator />
+
+                        <div>
+                          <h4 className="font-semibold mb-3 flex items-center gap-2">
+                            <Icon name="BookOpen" size={20} className="text-primary" />
+                            Правила игры
+                          </h4>
+                          <ul className="space-y-2">
+                            {game.rules?.map((rule, idx) => (
+                              <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                                <Icon name="Check" size={16} className="text-primary mt-0.5 flex-shrink-0" />
+                                <span>{rule}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        <Separator />
+
+                        <div>
+                          <h4 className="font-semibold mb-3 flex items-center gap-2">
+                            <Icon name="Package" size={20} className="text-primary" />
+                            Комплектация
+                          </h4>
+                          <ul className="space-y-2">
+                            {game.contents?.map((item, idx) => (
+                              <li key={idx} className="flex items-start gap-2 text-sm text-muted-foreground">
+                                <Icon name="Check" size={16} className="text-secondary mt-0.5 flex-shrink-0" />
+                                <span>{item}</span>
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+
+                        <Separator />
+
+                        <div className="flex items-center justify-between pt-4">
+                          <div className="text-3xl font-bold text-primary">{game.price.toLocaleString()} ₽</div>
+                          <Button size="lg" className="gap-2" onClick={() => addToCart(game)}>
+                            <Icon name="ShoppingCart" size={20} />
+                            В корзину
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                    <div className="text-2xl font-bold text-primary">{game.price.toLocaleString()} ₽</div>
-                  </CardContent>
-                  <CardFooter>
-                    <Button className="w-full gap-2" onClick={() => addToCart(game)}>
-                      <Icon name="ShoppingCart" size={18} />
-                      В корзину
-                    </Button>
-                  </CardFooter>
-                </Card>
+                  </Card>
+                </div>
               ))}
             </div>
           </section>
